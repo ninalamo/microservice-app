@@ -1,20 +1,30 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using sample.application.Commands.AddCustomer;
 using sample.az_functions.DTO;
 
 namespace sample.az_functions
 {
-    public class Function1
+    public class CustomerApi
     {
+
+        private readonly IMediator _mediator;
+
+        public CustomerApi(IMediator mediator)
+        {
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+        
         [FunctionName("customers")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
@@ -29,7 +39,7 @@ namespace sample.az_functions
 
             var result = await _mediator.Send(addCustomerCommand);
 
-            return OkResult(result);
+            return new OkObjectResult(result);
 
 
         }
