@@ -1,9 +1,15 @@
-﻿public abstract class Entity : IAuditable
+﻿using Newtonsoft.Json;
+
+public abstract class Entity : IAuditable
 {
 
     private int? _requestedHashCode;
 
-    public virtual Guid Id { get; protected set; }
+    [JsonProperty(PropertyName= "id")]
+    public virtual string Id { get; set; }
+    
+    [JsonProperty(PropertyName = "partitionKey")]
+    public string PartitionKey { get; set; }
 
 
     public bool IsTransient() => Id == default;

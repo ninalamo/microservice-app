@@ -1,5 +1,8 @@
 ﻿using System.Runtime.Serialization;
 using MediatR;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Logging;
+using sample.domain.AggregateModels.CustomerAggregate;
 
 namespace sample.application.Commands.AddCustomer;
 
@@ -21,12 +24,30 @@ public class AddCustomerCommand : IRequest<Guid>
 
 public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, Guid>
 {
-    public AddCustomerCommandHandler()
+    private readonly ILogger<AddCustomerCommandHandler> _logger;
+    public AddCustomerCommandHandler(ILogger<AddCustomerCommandHandler> logger)
     {
-        
+        _logger = logger;
     }
     public async Task<Guid> Handle(AddCustomerCommand request, CancellationToken cancellationToken)
     {
-        return Guid.NewGuid();
+        var cosmosClient = new CosmosClient(
+            "xxx",
+            "xxx",
+            new CosmosClientOptions() { ApplicationName = "CosmosDbApp" });
+
+        var database = await cosmosClient.CreateDatabaseIfNotExistsAsync("Customers");
+        var container = await database.Database.CreateContainerIfNotExistsAsync("Customer", "/partitionKey");
+
+
+        var customer = new Customer("nino", "alamo", 123141223, "nin.alamo@outlook.com");
+        
+        var response = await container.Container.CreateItemAsync<Customer>(
+            customer
+        , new PartitionKey(customer.PartitionKey));
+
+
+
+        return Guid.Parse(customer.Id);
     }
 }
