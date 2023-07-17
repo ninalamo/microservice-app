@@ -5,19 +5,10 @@ namespace sample.infrastructure.CosmosDbData;
 
 public class CosmosDbContainerFactory : ICosmosDbContainerFactory
 {
-    /// <summary>
-    ///     Azure Cosmos DB Client
-    /// </summary>
     private readonly CosmosClient _cosmosClient;
     private readonly string _databaseName;
     private readonly List<ContainerInfo> _containers;
 
-    /// <summary>
-    ///     Ctor
-    /// </summary>
-    /// <param name="cosmosClient"></param>
-    /// <param name="databaseName"></param>
-    /// <param name="containers"></param>
     public CosmosDbContainerFactory(CosmosClient cosmosClient,
         string databaseName,
         List<ContainerInfo> containers)
@@ -27,7 +18,7 @@ public class CosmosDbContainerFactory : ICosmosDbContainerFactory
         _cosmosClient = cosmosClient ?? throw new ArgumentNullException(nameof(cosmosClient));
     }
 
-    public ICosmosDbContainer GetContainer(string containerName)
+    public ICosmosDbContainer GetContainer(string? containerName)
     {
         if (_containers.Where(x => x.Name == containerName) == null)
         {

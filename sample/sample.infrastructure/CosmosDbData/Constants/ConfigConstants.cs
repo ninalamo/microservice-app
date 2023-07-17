@@ -8,9 +8,10 @@ public class ConfigConstants : IConfigConstants
     public IConfiguration Configuration { get; }
     private readonly CosmosDbSettings cosmosDbConfig;
 
-    public ConfigConstants(IConfiguration configuration)
+    public ConfigConstants(IConfiguration configuration, CosmosDbSettings cosmosDbConfig)
     {
         this.Configuration = configuration;
+        this.cosmosDbConfig = cosmosDbConfig;
         var temp = this.Configuration
             .GetSection("ConnectionStrings:CosmosDbSettings");
             //.GetValue<CosmosDbSettings>();

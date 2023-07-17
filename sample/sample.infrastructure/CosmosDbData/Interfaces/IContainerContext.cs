@@ -1,3 +1,5 @@
+using sample.domain.Seedwork;
+
 namespace sample.infrastructure.CosmosDbData.Interfaces;
 
 /// <summary>

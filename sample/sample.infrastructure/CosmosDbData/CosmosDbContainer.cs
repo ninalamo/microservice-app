@@ -8,7 +8,7 @@ public class CosmosDbContainer : ICosmosDbContainer
 
     public CosmosDbContainer(CosmosClient cosmosClient,
         string databaseName,
-        string containerName)
+        string? containerName)
     {
         this._container = cosmosClient.GetContainer(databaseName, containerName);
     }

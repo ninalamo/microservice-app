@@ -6,8 +6,5 @@
     public DateTimeOffset ModifiedOn { get; }
     public bool IsActive { get; }
 
-    void AuditOnCreate(string user);
-    void AuditOnUpdate(string user);
-    void Deactivate();
 }
 

@@ -1,14 +1,9 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using sample.domain.AggregateModels.CustomerAggregate;
+﻿using sample.domain.AggregateModels.CustomerAggregate;
+using sample.domain.Seedwork;
 
 namespace sample.domain.AggregateModels.CustomerAggregate
 {
-    public class Customer : Entity, IAggregateRoot
+    public class Customer : Entity
     {
         public Customer(string firstname, string lastname, double birthdayInEpoch, string email) { 
             FirstName = firstname;
@@ -29,5 +24,5 @@ namespace sample.domain.AggregateModels.CustomerAggregate
 public interface ICustomerRepository : IRepository<Customer>
 {
     Task<Customer> CreateAsync(Customer customer);
-    Task<Customer> UpdateAsync(Guid id, Customer customer);
+    Task<Customer> UpdateAsync(string id, Customer customer);
 }

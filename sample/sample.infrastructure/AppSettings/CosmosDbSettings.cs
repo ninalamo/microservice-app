@@ -21,3 +21,9 @@ public class CosmosDbSettings
     public List<ContainerInfo>? Containers { get; set; }
 
 }
+
+public class EventGridSettings
+{
+    public string? TopicEndpoint { get; set; }
+    public string? TopicAccessKey { get; set; }
+}

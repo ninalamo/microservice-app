@@ -4,21 +4,29 @@ using sample.infrastructure.CosmosDbData.Interfaces;
 
 namespace sample.infrastructure.CosmosDbData.Repository;
 
-public class CustomerRepository : IRepository<Customer>
+public static class StringExtensions
 {
-    public CustomerRepository(ICosmosDbContainerFactory cosmosDbContainerFactory, string containerName) : base(cosmosDbContainerFactory, containerName)
+    public static PartitionKey ToPartitionKey(this string str) => new PartitionKey(str);
+}
+public class CustomerRepository : ICustomerRepository
+{
+    private readonly ICosmosDbContainerFactory _cosmosDbContainerFactory;
+    private readonly Container _container;
+    
+    public CustomerRepository(ICosmosDbContainerFactory cosmosDbContainerFactory, string? containerName) 
     {
+        this._cosmosDbContainerFactory = cosmosDbContainerFactory ?? throw new ArgumentNullException(nameof(cosmosDbContainerFactory));
+        this._container = _cosmosDbContainerFactory.GetContainer(containerName)._container;
     }
 
-    public string GenerateId(Customer entity)
+
+    public async Task<Customer> CreateAsync(Customer customer)
     {
-       return entity.Id = Guid.NewGuid().ToString();
+        return await _container.CreateItemAsync(customer,customer.PartitionKey?.ToPartitionKey());
     }
 
-    public PartitionKey ResolvePartitionKey(string entityId)
+    public async Task<Customer> UpdateAsync(string id, Customer customer)
     {
-        throw new NotImplementedException();
+        return await this._container.UpsertItemAsync(customer, id.ToPartitionKey());
     }
-
-    public IUnitOfWork UnitOfWork { get; }
 }
